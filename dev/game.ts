@@ -15,14 +15,6 @@ class Game {
 
   private _carTime:number = 0;
 
-  public tires:Tire[] = [];
-
-  private player:Player;
-
-  public gasmeter:Gas;
-
-  public timer:Timer;
-
   private running:boolean = false;
 
   private dialog:Dialog;
@@ -33,12 +25,6 @@ class Game {
   private constructor() {
       this._fpsInterval = 1000 / this._fps;
       this._then = Date.now();
-
-      this.spawnTires();
-
-      this.player = new Player();
-      this.gasmeter = new Gas();
-      this.timer = new Timer();
 
       this.gameLoop();
   }
@@ -72,11 +58,7 @@ class Game {
     if (this.running) {
       // If enough time has elapsed, draw the next frame.
       if (elapsed > this._fpsInterval) {
-        this.player.update();
-        this.gasmeter.update();
-        this.timer.update();
-
-        // Every minute spawn a new car.
+        
         this.checkCar();
           
         // Get ready for next frame by setting then=now, but...
@@ -88,7 +70,7 @@ class Game {
       if (!this.dialog) {
         this.dialog = Dialog.getInstance();
         this.dialog.setHTML(
-          '<h1>KMar F1 - Pitstop</h1>' +
+          '<h1>KMar F1 - Aerodynamica</h1>' +
           '<p>Jij bent verantwoordelijk voor de pitstop. Probeer de snelste tijd neer te zetten.</p>' +
           '<p>Beweeg met de pijltjestoetsen en pak spullen vast met de spatiebalk.</p>' +
           '<p>Zet de banden op de auto en vul de auto met benzine.</p>'
@@ -98,23 +80,13 @@ class Game {
     }
   }
 
-  /**
-   * Create new tires.
-   */
-  private spawnTires() {
-    for (let i = 0; i < 4; i ++) {
-      this.tires.push(new Tire());
-    }
-  }
-
-  /**
+    /**
    * Check if the car's ready.
    */
   private checkCar() {
     if (this._carTime > this._fps * 5) {
       if (!this._car) {
         this._car = new Car();
-        this.timer.start();
       }
       this._carTime = 0;
     }
@@ -125,9 +97,6 @@ class Game {
 
       if (this._car.done) {
         this._car = null;
-        this.spawnTires();
-        this.gasmeter.reset();
-        this.timer.stop();
       }
     }
   }
